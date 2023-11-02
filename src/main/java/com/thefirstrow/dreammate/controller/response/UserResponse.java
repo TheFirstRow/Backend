@@ -6,15 +6,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserJoinResponse {
-
+public
+class UserResponse {
     private Long id;
     private String email;
 
-    public static UserJoinResponse fromUser(User user) {
-        return new UserJoinResponse(
+    public static UserResponse fromUser(User user) {
+        return new UserResponse(
                 user.getId(),
-                user.getEmail()
+                user.getUsername()
         );
     }
+
 }

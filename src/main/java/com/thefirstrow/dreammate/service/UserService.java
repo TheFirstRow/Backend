@@ -1,52 +1,67 @@
 package com.thefirstrow.dreammate.service;
 
+
 import com.thefirstrow.dreammate.exception.DreamMateApplicationException;
 import com.thefirstrow.dreammate.exception.ErrorCode;
-import com.thefirstrow.dreammate.model.entity.User;
+import com.thefirstrow.dreammate.model.User;
 import com.thefirstrow.dreammate.model.entity.UserEntity;
-import com.thefirstrow.dreammate.repository.UserRepository;
+import com.thefirstrow.dreammate.repository.UserEntityRepository;
+import com.thefirstrow.dreammate.utils.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-
-    public User join(String email, String nickname, String password) {
-
-        // 회원가입하려는 이메일로 회원가입된 유저가 있는지
-        userRepository.findByEmail(email).ifPresent(it -> {
-            throw new DreamMateApplicationException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("userEmail is %s", email));
-        });
-
-        // 회원가입하려는 닉네임으로 회원가입된 유저가 있는지
-        userRepository.findByNickname(nickname).ifPresent(it -> {
-            throw new DreamMateApplicationException();
-        });
+    private final UserEntityRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
 
-        // 회원가입 진행 = 유저 등록
-        UserEntity savedUser = userRepository.save(UserEntity.of(email, nickname, password));
 
-        return User.fromEntity(savedUser);
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${jwt.token.expired-time-ms}")
+    private Long expiredTimeMs;
+
+
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(
+                () -> new DreamMateApplicationException(ErrorCode.USER_NOT_FOUND, String.format("email is %s", email)));
+        return User.fromEntity(userEntity);
     }
 
     public String login(String email, String password) {
+        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new DreamMateApplicationException(ErrorCode.USER_NOT_FOUND, String.format("%s not founded", email)));
 
-        // 회원가입 여부 체크
-        UserEntity userEntity = userRepository.findByEmail(email).orElseThrow(() -> new DreamMateApplicationException());
-
-        // 비밀번호 체크
-        if(!userEntity.getPassword().equals(password)) {
-            throw new DreamMateApplicationException();
+        if(!encoder.matches(password, userEntity.getPassword())) {
+            throw new DreamMateApplicationException(ErrorCode.INVALID_PASSWORD);
         }
 
-        // 토큰 생성
-
-        return "";
+        String token = JwtTokenUtils.generateAccessToken(email, secretKey, expiredTimeMs);
+        return token;
     }
+
+
+    @Transactional
+    public User join(String email, String nickname, String password) {
+        // check the userId not exist
+        userRepository.findByEmail(email).ifPresent(it -> {
+            throw new DreamMateApplicationException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("email is %s", email));
+        });
+
+        userRepository.findByNickname(nickname).ifPresent(it -> {
+            throw new DreamMateApplicationException(ErrorCode.DUPLICATED_USER_NICKNAME, String.format("nickname is %s", nickname));
+        });
+
+        UserEntity savedUser = userRepository.save(UserEntity.of(email, nickname, encoder.encode(password)));
+        return User.fromEntity(savedUser);
+    }
+
+
 }

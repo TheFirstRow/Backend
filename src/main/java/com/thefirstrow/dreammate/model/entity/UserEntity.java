@@ -1,5 +1,6 @@
 package com.thefirstrow.dreammate.model.entity;
 
+import com.thefirstrow.dreammate.model.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,26 +11,26 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+
 @Setter
 @Getter
 @Entity
-@NoArgsConstructor
 @Table(name = "\"user\"")
 @SQLDelete(sql = "UPDATE \"user\" SET removed_at = NOW() WHERE id=?")
 @Where(clause = "removed_at is NULL")
+@NoArgsConstructor
 public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id = null;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "user_email", unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
-    private String nickname;
-
     private String password;
+
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
@@ -43,6 +44,7 @@ public class UserEntity {
     @Column(name = "removed_at")
     private Timestamp removedAt;
 
+
     @PrePersist
     void registeredAt() {
         this.registeredAt = Timestamp.from(Instant.now());
@@ -53,13 +55,11 @@ public class UserEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-
-    public static UserEntity of(String email, String nickname, String password) {
+    public static UserEntity of(String email, String nickname, String encodedPwd) {
         UserEntity entity = new UserEntity();
         entity.setEmail(email);
         entity.setNickname(nickname);
-        entity.setPassword(password);
+        entity.setPassword(encodedPwd);
         return entity;
     }
-
 }

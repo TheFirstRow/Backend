@@ -5,16 +5,16 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class DreamMateApplicationException extends RuntimeException{
+public class DreamMateApplicationException extends RuntimeException {
 
     private ErrorCode errorCode;
     private String message;
+
 
     public DreamMateApplicationException(ErrorCode errorCode) {
         this.errorCode = errorCode;
         this.message = null;
     }
-
 
     @Override
     public String getMessage() {
@@ -23,5 +23,6 @@ public class DreamMateApplicationException extends RuntimeException{
         } else {
             return String.format("%s. %s", errorCode.getMessage(), message);
         }
+
     }
 }

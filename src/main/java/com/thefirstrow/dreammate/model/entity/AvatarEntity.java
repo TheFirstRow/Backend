@@ -21,6 +21,10 @@ public class AvatarEntity {
     private String top;
     private String bottom;
     private String shoes;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 //    private Long id;
 //    private String gender;
 //    private String headClothesNumber;
@@ -32,12 +36,13 @@ public class AvatarEntity {
 //    private String bottomClothesColor;
 //    private String shoesColor;
 
-    public static AvatarEntity of(String gender, String top, String bottom, String shoes) {
+    public static AvatarEntity of(String gender, String top, String bottom, String shoes, UserEntity user) {
         AvatarEntity entity = new AvatarEntity();
         entity.setGender(gender);
         entity.setTop(top);
         entity.setBottom(bottom);
         entity.setShoes(shoes);
+        entity.setUser(user);
 //        entity.setGender(gender);
 //        entity.setHeadClothesNumber(headClothesNumber);
 //        entity.setTopClothesNumber(topClothesNumber);

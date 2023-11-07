@@ -45,12 +45,13 @@ public class UserControllerTest {
         String email = "email@email.com";
         String nickname = "nickname";
         String password = "password";
+        String confirmPassword = "password";
 
-        when(userService.join(email, nickname, password)).thenReturn(mock(User.class));
+        when(userService.join(email, nickname, password, confirmPassword)).thenReturn(mock(User.class));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(new UserJoinRequest("email@email,com", "nickname", "password"))))
+                        .content(objectMapper.writeValueAsBytes(new UserJoinRequest("email@email,com", "nickname", "password", "password"))))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -61,12 +62,13 @@ public class UserControllerTest {
         String email = "email@email.com";
         String nickname = "nickname";
         String password = "password";
+        String confirmPassword = "password";
 
-        when(userService.join(email, nickname, password)).thenThrow(new DreamMateApplicationException(ErrorCode.DUPLICATED_USER_EMAIL));
+        when(userService.join(email, nickname, password, confirmPassword)).thenThrow(new DreamMateApplicationException(ErrorCode.DUPLICATED_USER_EMAIL));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(new UserJoinRequest("email@email.com", "nickname", "password"))))
+                        .content(objectMapper.writeValueAsBytes(new UserJoinRequest("email@email.com", "nickname", "password", "password"))))
                 .andDo(print())
                 .andExpect(status().is(ErrorCode.DUPLICATED_USER_EMAIL.getStatus().value()));
     }

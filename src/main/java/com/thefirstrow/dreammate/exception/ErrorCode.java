@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "User has invalid permission"),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Connect to notification occurs error"),
+    CONFIRM_PASSWORD_NOT_MATCH(HttpStatus.CONFLICT, "The passwords do not match."),
     ;
 
     private final HttpStatus status;

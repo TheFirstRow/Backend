@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @Slf4j
 @RestController
@@ -23,8 +25,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public Response<UserJoinResponse> join(@RequestBody UserJoinRequest request) {
-        return Response.success(UserJoinResponse.fromUser(userService.join(request.getEmail(), request.getNickname(), request.getPassword())));
+    public Response<UserJoinResponse> join(@Valid @RequestBody UserJoinRequest request) {
+        return Response.success(UserJoinResponse.fromUser(userService.join(request.getEmail(), request.getNickname(), request.getPassword(), request.getConfirmPassword())));
     }
 
     @PostMapping("/login")

@@ -49,8 +49,12 @@ public class UserService {
 
 
     @Transactional
-    public User join(String email, String nickname, String password) {
-        // check the userId not exist
+    public User join(String email, String nickname, String password, String confirmPassword) {
+
+        if (!password.equals(confirmPassword)) {
+            throw new DreamMateApplicationException(ErrorCode.CONFIRM_PASSWORD_NOT_MATCH);
+        }
+
         userRepository.findByEmail(email).ifPresent(it -> {
             throw new DreamMateApplicationException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("email is %s", email));
         });

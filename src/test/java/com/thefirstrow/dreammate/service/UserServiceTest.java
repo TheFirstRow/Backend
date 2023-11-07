@@ -69,6 +69,7 @@ public class UserServiceTest {
         String email = "email@email.com";
         String nickname = "nickname";
         String password = "password";
+        String confirmPassword = "password";
 
 
         when(userEntityRepository.findByEmail(email)).thenReturn(Optional.empty());
@@ -76,7 +77,7 @@ public class UserServiceTest {
         when(bCryptPasswordEncoder.encode(password)).thenReturn("encrypt_password");
         when(userEntityRepository.save(any())).thenReturn(Optional.of(UserEntityFixture.get(email, password)));
 
-        Assertions.assertDoesNotThrow(() -> userService.join(email, nickname, password));
+        Assertions.assertDoesNotThrow(() -> userService.join(email, nickname, password, confirmPassword));
     }
 
 
@@ -85,6 +86,7 @@ public class UserServiceTest {
         String email = "email@email.com";
         String nickname = "nickname";
         String password = "password";
+        String confirmPassword = "password";
 
 
         when(userEntityRepository.findByEmail(email)).thenReturn(Optional.empty());
@@ -92,7 +94,7 @@ public class UserServiceTest {
         when(bCryptPasswordEncoder.encode(password)).thenReturn("encrypt_password");
         when(userEntityRepository.save(any())).thenReturn(Optional.of(UserEntityFixture.get(email, password)));
 
-        Assertions.assertThrows(DreamMateApplicationException.class, () -> userService.join(email, nickname, password));
+        Assertions.assertThrows(DreamMateApplicationException.class, () -> userService.join(email, nickname, password, confirmPassword));
     }
 
 }

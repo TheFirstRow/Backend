@@ -1,11 +1,13 @@
 package com.thefirstrow.dreammate.model.entity;
 
-import com.thefirstrow.dreammate.model.Avatar;
+import com.thefirstrow.dreammate.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -25,16 +27,26 @@ public class AvatarEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
-//    private Long id;
-//    private String gender;
-//    private String headClothesNumber;
-//    private String topClothesNumber;
-//    private String bottomClothesNumber;
-//    private String shoesNumber;
-//    private String headClothesColor;
-//    private String topClothesColor;
-//    private String bottomClothesColor;
-//    private String shoesColor;
+
+    @Column(name = "registered_at")
+    private Timestamp registeredAt;
+
+    @Column(name = "updated_at")
+    private Timestamp updatedAt;
+
+    @Column(name = "removed_at")
+    private Timestamp removedAt;
+
+
+    @PrePersist
+    void registeredAt() {
+        this.registeredAt = Timestamp.from(Instant.now());
+    }
+
+    @PreUpdate
+    void updatedAt() {
+        this.updatedAt = Timestamp.from(Instant.now());
+    }
 
     public static AvatarEntity of(String gender, String top, String bottom, String shoes, UserEntity user) {
         AvatarEntity entity = new AvatarEntity();
@@ -43,15 +55,6 @@ public class AvatarEntity {
         entity.setBottom(bottom);
         entity.setShoes(shoes);
         entity.setUser(user);
-//        entity.setGender(gender);
-//        entity.setHeadClothesNumber(headClothesNumber);
-//        entity.setTopClothesNumber(topClothesNumber);
-//        entity.setBottomClothesNumber(bottomClothesNumber);
-//        entity.setShoesNumber(shoesNumber);
-//        entity.setHeadClothesColor(headClothesColor);
-//        entity.setTopClothesColor(topClothesColor);
-//        entity.setBottomClothesColor(bottomClothesColor);
-//        entity.setShoesColor(shoesColor);
         return entity;
     }
 }

@@ -1,10 +1,11 @@
 package com.thefirstrow.dreammate.model;
 
 import com.thefirstrow.dreammate.model.entity.AvatarEntity;
-import com.thefirstrow.dreammate.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +17,10 @@ public class Avatar {
     private String top;
     private String bottom;
     private String shoes;
-    private UserEntity user;
+    private User user;
+    private Timestamp registeredAt;
+    private Timestamp updatedAt;
+    private Timestamp removedAt;
 
     public static Avatar fromEntity(AvatarEntity entity) {
         return new Avatar(
@@ -25,51 +29,10 @@ public class Avatar {
                 entity.getTop(),
                 entity.getBottom(),
                 entity.getShoes(),
-                entity.getUser()
+                User.fromEntity(entity.getUser()),
+                entity.getRegisteredAt(),
+                entity.getUpdatedAt(),
+                entity.getRemovedAt()
         );
     }
-
-
-//    public enum Top {
-//        TOP1("상의1"),
-//        TOP2("상의2"),
-//        TOP3("상의3");
-//
-//        private final String description;
-//
-//        Top(String description) {
-//            this.description = description;
-//        }
-//        public String getDescription() {
-//            return description;
-//        }
-//    }
-//    public enum Bottom {
-//        BOTTOM1("하의1"),
-//        BOTTOM2("하의2"),
-//        BOTTOM3("하의3");
-//
-//        private final String description;
-//
-//        Bottom(String description) {
-//            this.description = description;
-//        }
-//        public String getDescription() {
-//            return description;
-//        }
-//    }
-//    public enum Shoes {
-//        SHOES1("신발1"),
-//        SHOES2("신발2"),
-//        SHOES3("신발3");
-//
-//        private final String description;
-//
-//        Shoes(String description) {
-//            this.description = description;
-//        }
-//        public String getDescription() {
-//            return description;
-//        }
-//    }
 }

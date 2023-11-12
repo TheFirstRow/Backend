@@ -26,6 +26,7 @@ public class UserController {
 
     @PostMapping("/join")
     public Response<UserJoinResponse> join(@Valid @RequestBody UserJoinRequest request) {
+        System.out.println("회원가입 성공");
         return Response.success(UserJoinResponse.fromUser(userService.join(request.getEmail(), request.getNickname(), request.getPassword(), request.getConfirmPassword())));
     }
 

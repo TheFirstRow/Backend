@@ -17,6 +17,8 @@ public enum ErrorCode {
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Database error occurs"),
     NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Connect to notification occurs error"),
     CONFIRM_PASSWORD_NOT_MATCH(HttpStatus.CONFLICT, "The passwords do not match."),
+    AVATAR_NOT_FOUND(HttpStatus.NOT_FOUND, "Avatar not founded"),
+    AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "User already has an avatar")
     ;
 
     private final HttpStatus status;

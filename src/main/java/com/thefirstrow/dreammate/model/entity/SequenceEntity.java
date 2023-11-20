@@ -41,6 +41,21 @@ public class SequenceEntity {
     @Column(name = "removed_at")
     private Timestamp removedAt;
 
+    public static SequenceEntity of(String stageTitle, String stageContent, Long musicMs, String targetObject, Long effectNumber, String cameraName, Float x, Float y, Float z, UserEntity userEntity) {
+        SequenceEntity sequenceEntity = new SequenceEntity();
+        sequenceEntity.setStageTitle(stageTitle);
+        sequenceEntity.setStageContent(stageContent);
+        sequenceEntity.setMusicMs(musicMs);
+        sequenceEntity.setTargetObject(targetObject);
+        sequenceEntity.setEffectNumber(effectNumber);
+        sequenceEntity.setCameraName(cameraName);
+        sequenceEntity.setX(x);
+        sequenceEntity.setY(y);
+        sequenceEntity.setZ(z);
+        sequenceEntity.setUser(userEntity);
+        return sequenceEntity;
+    }
+
 
     @PrePersist
     void registeredAt() {

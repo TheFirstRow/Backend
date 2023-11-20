@@ -18,7 +18,8 @@ public enum ErrorCode {
     NOTIFICATION_CONNECT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Connect to notification occurs error"),
     CONFIRM_PASSWORD_NOT_MATCH(HttpStatus.CONFLICT, "The passwords do not match."),
     AVATAR_NOT_FOUND(HttpStatus.NOT_FOUND, "Avatar not founded"),
-    AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "User already has an avatar")
+    AVATAR_ALREADY_EXIST(HttpStatus.CONFLICT, "User already has an avatar"),
+    SEQUENCE_NOT_FOUND(HttpStatus.NOT_FOUND, "Sequence not founded")
     ;
 
     private final HttpStatus status;
